@@ -21,6 +21,7 @@ dylint_linting = "5.0.0"
 [dev-dependencies]
 dylint_testing = "5.0.0"
 libobs = "4.0.3"
+libobs-window-helper = "0.3.1"
 
 [package.metadata.rust-analyzer]
 rustc_private = true

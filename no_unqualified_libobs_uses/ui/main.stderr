@@ -1,5 +1,5 @@
 warning: 
-  --> $DIR/main.rs:5:14
+  --> $DIR/main.rs:7:14
    |
 LL |     unsafe { obs_get_audio() };
    |              ^^^^^^^^^^^^^^^
