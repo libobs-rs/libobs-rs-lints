@@ -10,4 +10,5 @@ extern crate rustc_session;
 #[unsafe(no_mangle)]
 pub fn register_lints(sess: &rustc_session::Session, lint_store: &mut rustc_lint::LintStore) {
     no_unqualified_libobs_uses::register_lints(sess, lint_store);
+    ensure_obs_call_in_runtime::register_lints(sess, lint_store);
 }

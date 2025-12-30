@@ -1,0 +1,31 @@
+[package]
+name = "ensure_obs_call_in_runtime"
+version = "0.1.0"
+authors = ["sshcrack"]
+description = "description goes here"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+
+[[example]]
+name = "ui"
+path = "ui/main.rs"
+
+[dependencies]
+clippy_utils.workspace = true
+dylint_linting = "5.0.0"
+
+[dev-dependencies]
+dylint_testing = "5.0.0"
+libobs = "4.0.3"
+libobs-window-helper = "0.3.1"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+[features]
+rlib = ["dylint_linting/constituent"]
+

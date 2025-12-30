@@ -1,0 +1,11 @@
+warning: 
+  --> $DIR/main.rs:35:9
+   |
+LL |         obs_get_audio(); // expect warning
+   |         ^^^^^^^^^^^^^^^
+   |
+   = help: wrap libobs calls in runtime.run_with_obs or runtime.run_with_obs_result
+   = note: `#[warn(ensure_obs_call_in_runtime)]` on by default
+
+warning: 1 warning emitted
+
