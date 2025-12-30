@@ -91,6 +91,8 @@ impl<'tcx> LateLintPass<'tcx> for NoUnqualifiedLibobsUses {
 }
 
 fn is_from_libobs_crate(tcx: TyCtxt<'_>, def_id: DefId) -> bool {
+    println!("Checking def_id: {:?}", def_id);
+    println!("Crate name: {}", tcx.crate_name(def_id.krate).as_str());
     tcx.crate_name(def_id.krate).as_str() == "libobs"
 }
 
