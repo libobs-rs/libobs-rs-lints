@@ -91,13 +91,7 @@ impl<'tcx> LateLintPass<'tcx> for NoUnqualifiedLibobsUses {
 }
 
 fn is_from_libobs_crate(tcx: TyCtxt<'_>, def_id: DefId) -> bool {
-    // Get the crate name for this def_id
-    if let Some(crate_name) = tcx.crate_name(def_id.krate).as_str().strip_prefix("libobs") {
-        // Check if it's exactly "libobs" or starts with "libobs-" or "libobs_"
-        crate_name.is_empty() || crate_name.starts_with('-') || crate_name.starts_with('_')
-    } else {
-        false
-    }
+    tcx.crate_name(def_id.krate).as_str() == "libobs"
 }
 
 #[test]
