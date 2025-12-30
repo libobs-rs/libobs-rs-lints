@@ -1,0 +1,28 @@
+[package]
+name = "libobs-rs-lints"
+version = "0.1.0"
+authors = ["sshcrack"]
+description = "General-purpose libobs-rs lints"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+no_unqualified_libobs_uses = { path = "no_unqualified_libobs_uses", features = ["rlib"] }
+dylint_linting = "5.0.0"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+
+[workspace]
+members = ["no_unqualified_libobs_uses"]
+
+[workspace.dependencies]
+clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "20ce69b9a63bcd2756cd906fe0964d1e901e042a" }
+
+
+[workspace.metadata.rust-analyzer]
+rustc_private = true
