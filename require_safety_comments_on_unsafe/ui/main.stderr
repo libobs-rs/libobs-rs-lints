@@ -29,50 +29,5 @@ LL | |     }
    |
    = help: add a SAFETY comment explaining why this unsafe block is safe
 
-warning: 
-  --> $DIR/main.rs:33:5
-   |
-LL | /     unsafe {
-LL | |         safe_documented_function();
-LL | |     }
-   | |_____^
-   |
-   = help: add a SAFETY comment explaining why this unsafe block is safe
-
-warning: 
-  --> $DIR/main.rs:46:5
-   |
-LL | /     unsafe {
-LL | |         // safety comment is missing here
-LL | |         dangerous_function();
-LL | |     }
-   | |_____^
-   |
-   = help: add a SAFETY comment explaining why this unsafe block is safe
-
-warning: 
-  --> $DIR/main.rs:58:5
-   |
-LL | /     unsafe {
-LL | |         // Safety comment should be here
-LL | |         safe_documented_function();
-...  |
-LL | |         safe_documented_function();
-LL | |     }
-   | |_____^
-   |
-   = help: add a SAFETY comment explaining why this unsafe block is safe
-
-warning: 
-  --> $DIR/main.rs:68:5
-   |
-LL | /     unsafe {
-LL | |         // expect warning: missing SAFETY comment
-LL | |         dangerous_function();
-LL | |     }
-   | |_____^
-   |
-   = help: add a SAFETY comment explaining why this unsafe block is safe
-
-warning: 7 warnings emitted
+warning: 3 warnings emitted
 

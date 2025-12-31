@@ -92,28 +92,22 @@ impl<'tcx> LateLintPass<'tcx> for RequireSafetyCommentsOnUnsafe {
 }
 
 fn has_safety_doc_comment(cx: &LateContext<'_>, item: &Item<'_>) -> bool {
-    // Get the span for the item and look for safety doc comments above it
+    // Look for "# Safety" in documentation comments above the function
     let source_map = cx.tcx.sess.source_map();
     let item_span = item.span;
     
-    // Get the source file
+    // Get the source file and calculate search range
     let file = source_map.lookup_source_file(item_span.lo());
     let file_start = file.start_pos;
-    
-    // Calculate how far back to look (e.g., 1000 characters for doc comments)
     let search_start = if item_span.lo().0 >= file_start.0 + 1000 {
         BytePos(item_span.lo().0 - 1000)
     } else {
         file_start
     };
     
-    // Create a span from search_start to item_start
+    // Search for "# Safety" in the text before the function
     let search_span = item_span.with_lo(search_start).with_hi(item_span.lo());
-    
-    // Get the text before the item
     if let Ok(preceding_text) = source_map.span_to_snippet(search_span) {
-        // Look for Safety doc comment in the preceding text
-        // Check for "/// # Safety" or "/** # Safety" patterns
         if preceding_text.contains("# Safety") {
             return true;
         }
@@ -123,40 +117,37 @@ fn has_safety_doc_comment(cx: &LateContext<'_>, item: &Item<'_>) -> bool {
 }
 
 fn has_safety_comment_before_block(cx: &LateContext<'_>, block: &Block<'_>) -> bool {
+    // Look for "// SAFETY:" comment before or inside an unsafe block
     let source_map = cx.tcx.sess.source_map();
     
-    // Check if there are any statements in the block
+    // Empty blocks don't need comments
     if block.stmts.is_empty() && block.expr.is_none() {
-        // Empty block, no safety comment needed
         return false;
     }
     
-    // Get the first statement or expression in the block
-    let first_item_span = if let Some(first_stmt) = block.stmts.first() {
-        first_stmt.span
-    } else if let Some(expr) = block.expr {
-        expr.span
+    // Get the start of the block
+    let block_start = block.span.lo();
+    let file = source_map.lookup_source_file(block_start);
+    let file_start = file.start_pos;
+    
+    // Search back up to 300 characters for a SAFETY comment  
+    let search_start = if block_start.0 >= file_start.0 + 300 {
+        BytePos(block_start.0 - 300)
     } else {
-        return false;
+        file_start
     };
     
-    // Get the block start (just after opening brace)
-    let block_start = block.span.lo();
+    // Get text from 300 chars before the unsafe block to the start of it
+    let search_span = block.span.with_lo(search_start).with_hi(block_start);
     
-    // Create a span from block start to first item
-    let span_to_check = block.span.with_lo(block_start).with_hi(first_item_span.lo());
-    
-    // Get the text between the opening brace and the first statement
-    if let Ok(text_before_first_item) = source_map.span_to_snippet(span_to_check) {
-        // Look for SAFETY comment in this text
-        for line in text_before_first_item.lines() {
-            let trimmed = line.trim();
-            
-            // Found a SAFETY comment (accept "SAFETY:" and "Safety:" variants)
-            if trimmed.starts_with("// SAFETY:") || 
-               trimmed.starts_with("// Safety:") {
-                return true;
-            }
+    if let Ok(preceding_text) = source_map.span_to_snippet(search_span) {
+        // Check if "// SAFETY:" appears in the text before the block
+        if preceding_text.contains("// SAFETY:") {
+            return true;
+        }
+        // Also check for "// Safety:" variant
+        if preceding_text.contains("// Safety:") {
+            return true;
         }
     }
     
