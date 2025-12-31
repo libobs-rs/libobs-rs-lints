@@ -35,3 +35,9 @@ fn main() {
         obs_get_audio(); // expect warning
     }
 }
+
+fn test() {
+    unsafe {
+        obs_get_audio(); // expect warning
+    }
+}

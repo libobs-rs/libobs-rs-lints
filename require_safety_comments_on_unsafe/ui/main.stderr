@@ -1,0 +1,78 @@
+warning: 
+  --> $DIR/main.rs:4:1
+   |
+LL | / unsafe fn dangerous_function() {
+LL | |     // ...
+LL | | }
+   | |_^
+   |
+   = help: add a safety comment explaining when it is safe to call this function
+   = note: `#[warn(require_safety_comments_on_unsafe)]` on by default
+
+warning: 
+  --> $DIR/main.rs:9:1
+   |
+LL | / unsafe fn another_dangerous() {
+LL | |     // ...
+LL | | }
+   | |_^
+   |
+   = help: add a safety comment explaining when it is safe to call this function
+
+warning: 
+  --> $DIR/main.rs:22:5
+   |
+LL | /     unsafe {
+LL | |         dangerous_function();
+LL | |     }
+   | |_____^
+   |
+   = help: add a SAFETY comment explaining why this unsafe block is safe
+
+warning: 
+  --> $DIR/main.rs:33:5
+   |
+LL | /     unsafe {
+LL | |         safe_documented_function();
+LL | |     }
+   | |_____^
+   |
+   = help: add a SAFETY comment explaining why this unsafe block is safe
+
+warning: 
+  --> $DIR/main.rs:46:5
+   |
+LL | /     unsafe {
+LL | |         // safety comment is missing here
+LL | |         dangerous_function();
+LL | |     }
+   | |_____^
+   |
+   = help: add a SAFETY comment explaining why this unsafe block is safe
+
+warning: 
+  --> $DIR/main.rs:58:5
+   |
+LL | /     unsafe {
+LL | |         // Safety comment should be here
+LL | |         safe_documented_function();
+...  |
+LL | |         safe_documented_function();
+LL | |     }
+   | |_____^
+   |
+   = help: add a SAFETY comment explaining why this unsafe block is safe
+
+warning: 
+  --> $DIR/main.rs:68:5
+   |
+LL | /     unsafe {
+LL | |         // expect warning: missing SAFETY comment
+LL | |         dangerous_function();
+LL | |     }
+   | |_____^
+   |
+   = help: add a SAFETY comment explaining why this unsafe block is safe
+
+warning: 7 warnings emitted
+
