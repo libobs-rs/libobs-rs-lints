@@ -127,6 +127,7 @@ fn has_safety_comment_before_block(cx: &LateContext<'_>, block: &Block<'_>) -> b
     
     // Get the start of the block
     let block_start = block.span.lo();
+    let block_end = block.span.hi();
     let file = source_map.lookup_source_file(block_start);
     let file_start = file.start_pos;
     
@@ -142,11 +143,21 @@ fn has_safety_comment_before_block(cx: &LateContext<'_>, block: &Block<'_>) -> b
     
     if let Ok(preceding_text) = source_map.span_to_snippet(search_span) {
         // Check if "// SAFETY:" appears in the text before the block
-        if preceding_text.contains("// SAFETY:") {
+        if preceding_text.contains("// SAFETY:") || preceding_text.contains("// Safety:") {
             return true;
         }
-        // Also check for "// Safety:" variant
-        if preceding_text.contains("// Safety:") {
+    }
+    
+    // Also check inside the block (up to 300 chars from the start)
+    let inside_search_end = if block_start.0 + 300 <= block_end.0 {
+        BytePos(block_start.0 + 300)
+    } else {
+        block_end
+    };
+    
+    let inside_search_span = block.span.with_lo(block_start).with_hi(inside_search_end);
+    if let Ok(inside_text) = source_map.span_to_snippet(inside_search_span) {
+        if inside_text.contains("// SAFETY:") || inside_text.contains("// Safety:") {
             return true;
         }
     }

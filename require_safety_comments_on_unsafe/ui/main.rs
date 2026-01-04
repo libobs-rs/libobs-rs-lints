@@ -35,6 +35,19 @@ fn main() {
         safe_documented_function();
     }
 
+
+    // Again no warning should be emitted here
+    unsafe {
+        // SAFETY: all preconditions are met
+        another_dangerous();
+    }
+
+    // This should be valid
+    unsafe {
+        // SAFETY: Some security conditions are satisfied
+        safe_documented_function();
+    }
+
     // This should emit a warning because this unsafe block has no safety comment
     unsafe {
         safe_documented_function();
